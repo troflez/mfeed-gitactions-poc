@@ -25,7 +25,7 @@ jobs:
         run: |
           docker version
           docker build --progress plain -t $DOCKERUSER-${{ github.event.repository.name }}-${{ github.ref_name }}:latest .
-          docker tag $DOCKERUSER-${{ git.github.event.repository.name }}-${{ github.ref_name }}:latest $DOCKERUSER-${{ git.github.event.repository.name }}-${{ github.ref_name }}:${{ github.job }}
+          docker tag $DOCKERUSER-${{ github.event.repository.name }}-${{ github.ref_name }}:latest $DOCKERUSER-${{ github.event.repository.name }}-${{ github.ref_name }}:${{ github.job }}
           docker images
 
       - name: Login to Dockerhub
