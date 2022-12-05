@@ -21,6 +21,7 @@ jobs:
         run: |
           sed -i 's, localhost:44343, $MFEEDDOMAIN, g' src/MFeed/src/environments/environment.ts
 
+      - uses: actions/checkout@v2
       - name: Docker Image build
         run: docker version |
           docker build --progress plain -t $DOCKERUSER-${{ git.github.event.repository.name }}-${{ github.ref_name }}:latest .
