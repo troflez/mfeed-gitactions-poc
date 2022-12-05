@@ -1,0 +1,28 @@
+name: Just a test CI
+
+on:
+  # pull_request_review:
+  #   types: [submitted]
+  push:
+    branches:
+      - development
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      MFEEDDOMAIN: bo.mfeeduno.com
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Change Config
+        run: |
+          sed -i 's, localhost:44343, $MFEEDDOMAIN, g' src/MFeed/src/environments/environment.ts
+          echo "sed -i 's, localhost:44343, $MFEEDDOMAIN, g' src/MFeed/src/environments/environment.ts"
+
+      # - name: Docker Image build
+      #   run: docker version |
+      #     DOCKER_BUILDKIT=1 docker build --progress plain -t harbor.btnpr.com/${repo_name_lower}/${branch_name}:latest .
+      #     docker tag harbor.btnpr.com/${repo_name_lower}/${branch_name}:latest harbor.btnpr.com/${repo_name_lower}/${branch_name}:${env.BUILD_NUMBER}
+      #     docker images
