@@ -1,0 +1,96 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <ng-container *ngIf="oddsType">
+        <ng-container *ngIf="oddsType.id">Edit</ng-container>
+        <ng-container *ngIf="!oddsType.id">Create</ng-container>
+        Odds Type
+        <ng-container *ngIf="oddsType.id">'{{ oddsType.name }}'</ng-container>
+      </ng-container>
+    </div>
+  </div>
+  <div class="overlay overlay-block cursor-default modal-body">
+    <ng-container *ngIf="isLoading$ | async">
+      <div class="overlay-layer bg-transparent">
+        <div class="spinner spinner-lg spinner-success"></div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="oddsType">
+      <form action="#" class="form form-label-right" [formGroup]="formGroup">
+        <div class="form-group row">
+          <div class="col-lg-12">
+            <label class="form-label">Enter Name</label>
+            <input
+              type="text"
+              class="form-control form-control-lg form-control-solid"
+              name="name"
+              placeholder="Name"
+              autocomplete="off"
+              [class.is-invalid]="isControlInvalid('name')"
+              [class.is-valid]="isControlValid('name')"
+              formControlName="name"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="controlHasError('required', 'name')"
+            >
+              Name is required
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-lg-12">
+            <label class="form-label">Enter Code</label>
+            <input
+              type="text"
+              class="form-control form-control-lg form-control-solid"
+              name="code"
+              placeholder="Code"
+              autocomplete="off"
+              [class.is-invalid]="isControlInvalid('code')"
+              [class.is-valid]="isControlValid('code')"
+              formControlName="code"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="controlHasError('required', 'name')"
+            >
+              Code is required
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-lg-12">
+            <label>Is Active</label>
+            <select
+              class="form-control form-control-lg form-control-solid"
+              name="isActive"
+              formControlName="isActive"
+            >
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+        </div>     
+      </form>
+    </ng-container>
+  </div>
+  <div class="modal-footer">
+    <ng-container *ngIf="oddsType">
+      <button
+        type="submit"
+        class="btn btn-primary btn-elevate mr-2"
+        (click)="save()"
+        [disabled]="formGroup.invalid">
+        Save
+      </button>
+    </ng-container>
+    <button
+      type="button"
+      class="btn btn-light btn-elevate"
+      (click)="modal.dismiss()">
+      Cancel
+    </button>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<div class="modal-header">
+  <div class="modal-title h4">Sync Leagues and Teams</div>
+</div>
+<div class="form-group row" [formGroup]="filterGroup">
+  <div class="col-lg-4">
+    <label for="example-search-input" class="col-6 col-form-label">League</label> 
+    <div class="col-8">
+      <input type="text" class="form-control" formControlName="league" />
+    </div>
+  </div>
+</div>
+<div class="modal-body overlay overlay-block cursor-default">
+  <ng-container *ngIf="isLoading">
+    <div class="overlay-layer">
+      <div class="spinner spinner-lg spinner-primary"></div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="msg$ | async as msg">
+    <div
+      class="mb-10 alert alert-custom alert-light-danger alert-dismissible"
+    >
+      <div class="alert-text">{{msg}}</div>
+    </div>
+  </ng-container>  
+  <div class="table-responsive angular-bootstrap-table">
+    <table class="table table-head-custom table-vertical-center overflow-hidden">
+      <thead>
+        <th>LEAGUE</th>
+        <th>ACTION</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of leagues; let i = index">
+          <td>{{item}}</td>
+          <td>            
+            <a title="Teams" class="btn btn-icon btn-light-primary btn-hover-primary btn-sm mx-1"
+            (click)="sync(item)">
+            <span class="svg-icon svg-icon-md svg-icon-primary">
+              <em class="fas fa-sync"></em>
+            </span>
+            </a>
+          </td>
+      </tbody>
+    </table>
+  </div>
+</div>

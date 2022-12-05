@@ -1,0 +1,39 @@
+<div class="card card-custom">
+  <!--begin::Header-->
+  <div class="card-header py-3">
+    <div class="card-title align-items-start flex-column">
+      <h3 class="card-label font-weight-bolder text-dark">API Checker</h3>
+      <span class="text-muted font-weight-bold font-size-sm mt-1">Check values of mgoal consumed api</span>
+    </div>
+    <div class="card-toolbar">
+      <button type="submit" class="btn btn-primary mr-2" (click)="refresh()"><em class="fas fa-undo"></em> Refresh</button>
+    </div>
+  </div>
+  <!--end::Header-->
+  <!--begin::Form-->
+  <div class="form">
+    <div class="card-body"><!-- begin: Filtration form -->
+      <div class="form form-label-right">
+        <div class="form-group row">
+          <div class="col-lg-12">
+            <div class="row">            
+              <div class="col-lg-2">              
+                <select #ddSportType (change)="onSportChange(ddSportType.value)" class="form-control" name="sportType" placeholder="Select Sport">
+                  <option *ngFor="let item of _sportTypeList$ | async" value={{item.name}}>{{item.name}}</option>
+                </select><small class="form-text text-muted"><strong>Select</strong> Sport</small>
+              </div>              
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end: Filtration form -->
+      <div class="form-group row" *ngFor="let item of _oddsList$ | async">
+        <label class="col-xl-2 col-lg-2 col-form-label text-alert">{{item.oddsType}}</label>
+        <div class="col-lg-9 col-xl-7">
+          <ngx-json-viewer [json]="item.list" [expanded]="false"></ngx-json-viewer>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--end::Form-->
+</div>

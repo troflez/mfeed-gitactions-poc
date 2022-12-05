@@ -1,0 +1,46 @@
+<div class="modal-header">
+  <div class="modal-title h4">Upload {{ mode == 1? "team": "league" }} icons (Zip file)</div>
+</div>
+<div class="modal-body overlay overlay-block cursor-default">
+  <ng-container *ngIf="isLoading">
+    <div class="overlay-layer">
+      <div class="spinner spinner-lg spinner-primary"></div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="msg$ | async as msg">
+    <div
+      class="mb-10 alert alert-custom alert-light-danger alert-dismissible"
+    >
+      <div class="alert-text">{{msg}}</div>
+    </div>
+  </ng-container>
+  <div class="table-responsive angular-bootstrap-table">
+    <input type="file" class="file-upload" style="display: none;" (change)="onFileSelected($event)" #iconFileUpload/>
+  </div>  
+  <div class="form-group row">
+    <div class="col-lg-8">
+        <input
+        type="text"
+        class="form-control form-control-lg form-control-solid"
+        name="fileDir"
+        placeholder="File Src"
+        autocomplete="off"
+        [(ngModel)]="zipFilename"
+        readonly="true"
+      />
+    </div>
+    <div>
+      <button class="btn btn-primary"
+        (click)="iconFileUpload.click()">
+        <span class="fas fa-upload"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <div>
+    <button type="button" class="btn btn-primary btn-elevate mr-2" (click)="save()">Upload</button>
+    <button type="button" class="btn btn-light btn-elevate" (click)="modal.dismiss()">Cancel</button>
+  </div>
+</div>

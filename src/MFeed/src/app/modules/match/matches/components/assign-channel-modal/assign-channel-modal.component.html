@@ -1,0 +1,130 @@
+<div class="modal-header">
+  <div class="modal-title h4">Select GLive Match</div>
+</div>
+<div class="modal-body overlay overlay-block cursor-default">
+  <div class="table-responsive angular-bootstrap-table">
+    <table class="table table-head-custom table-vertical-center overflow-hidden">
+      <thead>
+        <th>MATCH ID</th>
+        <th>TOURNAMENT</th>
+        <th>HOME TEAM</th>
+        <th>AWAY TEAM</th>
+        <th>MATCH DATE</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{matchParam.id}}</td>
+          <td>{{matchParam.tournament}}</td>
+          <td>{{matchParam.homeTeam}}</td>
+          <td>{{matchParam.awayTeam}}</td>
+          <td>{{ matchParam.matchDate| date: 'M/d/yy h:mm a' }}</td>
+      </tbody>
+    </table>
+  </div>
+  <ng-container *ngIf="isLoading">
+    <div class="overlay-layer">
+      <div class="spinner spinner-lg spinner-primary"></div>
+    </div>
+  </ng-container>
+  <div class="row" [formGroup]="filterGroup">            
+    <div class="col-lg-2">              
+      <input type="text" class="form-control" name="gLiveMatchID" placeholder="Search" value=""
+      formControlName="gLiveMatchID" /><small class="form-text text-muted"><strong>Search</strong> by Match ID</small>
+    </div>
+    <div class="col-lg-2">              
+      <input type="text" class="form-control" name="tournament" placeholder="Search" value=""
+      formControlName="tournament" /><small class="form-text text-muted"><strong>Search</strong> by Tournament</small>
+    </div>
+    <div class="col-lg-2">              
+      <input type="text" class="form-control" name="homeTeam" placeholder="Search" value=""
+      formControlName="homeTeam" /><small class="form-text text-muted"><strong>Search</strong> by Home Team</small>
+    </div>
+    <div class="col-lg-2">              
+      <input type="text" class="form-control" name="awayTeam" placeholder="Search" value=""
+      formControlName="awayTeam" /><small class="form-text text-muted"><strong>Search</strong> by Away Team</small>
+    </div>
+    <div class="col-lg-2">  
+      <div class="input-group">                
+        <input class="form-control" placeholder="mm/dd/yyyy hh:mm tt" name="timeStart" formControlName="timeStart" 
+              [owlDateTimeTrigger]="dtATimeStart" [owlDateTime]="dtATimeStart" autocomplete="off">
+        <owl-date-time #dtATimeStart></owl-date-time>
+      </div>
+      <small class="form-text text-muted"><strong>Search</strong> by Time Start Date Range (From)</small>
+    </div>
+    <div class="col-lg-2">  
+      <div class="input-group">                
+        <input class="form-control" placeholder="mm/dd/yyyy hh:mm tt" name="timeEnd" formControlName="timeEnd" 
+              [owlDateTimeTrigger]="dtATimeEnd" [owlDateTime]="dtATimeEnd" autocomplete="off">
+        <owl-date-time #dtATimeEnd></owl-date-time>
+      </div>
+      <small class="form-text text-muted"><strong>Search</strong> by Time Start Date Range (To)</small>
+    </div>
+  </div>
+  <!-- begin:Table -->
+  <div class="table-responsive angular-bootstrap-table">
+    <table class="table table-head-custom table-vertical-center overflow-hidden">
+      <thead>
+        <th></th>
+        <th>
+          Match ID
+          <app-sort-icon column="gLiveMatchID" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+            (sort)="sort($event)"></app-sort-icon>
+        </th>
+        <th>
+          Sport
+          <app-sort-icon column="sportType" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+            (sort)="sort($event)"></app-sort-icon>
+        </th>
+        <th>
+          Tournament
+          <app-sort-icon column="tournament" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+            (sort)="sort($event)"></app-sort-icon>
+        </th>
+        <th>
+          Home Team
+          <app-sort-icon column="homeTeam" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+            (sort)="sort($event)"></app-sort-icon>
+        </th>
+        <th>
+          Away Team
+          <app-sort-icon column="awayTeam" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+            (sort)="sort($event)"></app-sort-icon>
+        </th>
+        <th>
+          CH
+          <app-sort-icon column="channel" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+            (sort)="sort($event)"></app-sort-icon>
+        </th>
+        <th>
+          Time Start
+          <app-sort-icon column="timeStart" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+            (sort)="sort($event)"></app-sort-icon>
+        </th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let match of gLiveMatchService.items$ | async">
+          <td class="selection-cell">
+            <input type="radio" name="selectedGLiveID" (click)="selectMatch(match.id)" [checked]="isSelected(match.id)"/>
+          </td>
+          <td>{{ match.id }}</td>
+          <td>{{ match.sportType }}</td>
+          <td>{{ match.tournament }}</td>
+          <td>{{ match.homeTeam }}</td>
+          <td>{{ match.awayTeam }}</td>
+          <td>{{ match.channel }}</td>
+          <td>{{ match.timeStart| date: 'MM/dd/yyyy hh:mm a' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- end: Table -->
+  <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
+    [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator>
+</div>
+<div class="modal-footer">
+  <div>
+    <button type="button" class="btn btn-primary btn-elevate mr-2" (click)="submitSelected()">Submit</button> 
+    <button type="button" class="btn btn-danger btn-elevate mr-2" (click)="clearMapping()">Remove</button>
+    <button type="button" class="btn btn-light btn-elevate" (click)="modal.dismiss()">Cancel</button>
+  </div>
+</div>

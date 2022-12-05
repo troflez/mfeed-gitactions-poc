@@ -1,0 +1,49 @@
+<div class="modal-header">
+  <div class="modal-title h4">Edit Teams - {{leagueName}}</div>
+</div>
+<div class="modal-body overlay overlay-block cursor-default">
+  <ng-container *ngIf="isLoading">
+    <div class="overlay-layer">
+      <div class="spinner spinner-lg spinner-primary"></div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="msg$ | async as msg">
+    <div
+      class="mb-10 alert alert-custom alert-light-danger alert-dismissible"
+    >
+      <div class="alert-text">{{msg}}</div>
+    </div>
+  </ng-container>
+  <div class="table-responsive angular-bootstrap-table">
+    <table class="table table-head-custom table-vertical-center overflow-hidden">
+      <thead>
+        <th>DISPLAY NAME</th>
+        <th>KEY</th>
+        <th>ICON</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of teams; let i = index">
+          <td>
+            <input class="form-control form-control-lg form-control-solid" [(ngModel)]="item.displayName" />
+          </td>
+          <td>{{item.sbFeedKey}}</td>
+          <td style="white-space: nowrap;">
+            <img alt="Team logo" *ngIf="item.icon && !item.iconURL" [src]='apiURL + "/team/getteamicon/" + item.icon' style="float:left;max-height: 50px;max-width: 50px;"/>
+            <div style="vertical-align:middle;">
+              <button class="btn btn-primary"
+                (click)="openLogoModal(i, item.icon)">
+                <span class="fas fa-upload"></span>
+              </button>
+            </div>
+          </td>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <div>
+    <button type="button" class="btn btn-primary btn-elevate mr-2" (click)="save()">Update</button>
+    <button type="button" class="btn btn-light btn-elevate" (click)="modal.dismiss()">Cancel</button>
+  </div>
+</div>

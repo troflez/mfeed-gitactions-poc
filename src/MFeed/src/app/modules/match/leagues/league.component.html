@@ -1,0 +1,113 @@
+<div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">League List</h3>
+    </div>
+    <div class="card-toolbar">
+      <button type="button" class="btn btn-primary mx-1" (click)="showBatchUploadLeagueIcon()" *ngIf="authService.hasWritePermission(MODULE.League)">
+        <em class="far fa-file-archive"></em> Batch upload league icon
+      </button>
+      <button type="button" class="btn btn-primary" (click)="showBatchUploadTeamIcon()" *ngIf="authService.hasWritePermission(MODULE.Team)">
+        <em class="far fa-file-archive"></em> Batch upload team icon
+      </button>
+    </div>
+  </div>
+  <div class="card-body">
+    <!-- begin: Filtration form -->
+    <div class="form form-label-right">
+      <div class="form-group row">
+        <div class="col-lg-12">
+          <div class="row" [formGroup]="filterGroup">
+            <div class="col-lg-2">
+              <input type="text" class="form-control" name="name" placeholder="Search" value=""
+              formControlName="name" /><small class="form-text text-muted"><strong>Search</strong> by Display Name</small>
+            </div>            
+            <div class="col-lg-2">              
+              <select class="form-control" name="sportTypeID" placeholder="Filter by Sport" formControlName="sportTypeID">
+                <option value="">All</option>
+                <option *ngFor="let item of sportTypeList$ | async" value={{item.id}}>{{item.name}}</option>
+              </select><small class="form-text text-muted"><strong>Search</strong> by Sport</small>
+            </div> 
+            <div>
+              <select class="form-control" name="showTeamWoLogo" placeholder="Search" formControlName="showTeamWoLogo">
+                <option value="false">No</option>
+                <option value="true">Yes</option>
+              </select>
+              <small class="form-text text-muted"><strong>Show</strong> only leagues with team w/o logo</small>              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end: Filtration form -->
+    <!-- begin:Table -->
+    <div class="table-responsive angular-bootstrap-table">
+      <table class="table table-head-custom table-vertical-center overflow-hidden">
+        <thead>
+          <th>
+            Display Name
+            <app-sort-icon column="displayName" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
+          </th>
+          <th>
+            Key
+            <app-sort-icon column="sbFeedKey" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
+          </th>
+          <th>
+            Sport
+            <app-sort-icon column="sportType" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
+          </th>
+          <th>
+            Icon (Light)
+            <app-sort-icon column="icon" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
+          </th>
+          <th>
+            Icon (Dark)
+            <app-sort-icon column="iconDark" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
+          </th>
+          <th *ngIf="authService.hasWritePermission(MODULE.UserManagement)">ACTIONS</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of leagueService.items$ | async">
+            <td>{{ item.displayName }}</td>
+            <td>{{ item.sbFeedKey }}</td>
+            <td>{{ item.sportType }}</td>
+            <td class="center">
+              <img alt="logo" *ngIf="item.icon" src='{{apiURL + "/league/getleagueicon/" + item.icon}}' style="max-width: 50px;max-height: 50px;background-color: black;"/>
+            </td>
+            <td class="center">
+              <img alt="logo" *ngIf="item.iconDark" src='{{apiURL + "/league/getleagueicon/" + item.iconDark}}' style="max-width: 50px;max-height: 50px;"/>
+            </td>
+            <td *ngIf="authService.hasWritePermission(MODULE.League)">              
+              <a title="Edit" class="btn btn-icon btn-light-primary btn-hover-primary btn-sm mx-1"
+                (click)="edit(item.id)">
+                <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true"
+                  class="svg-icon svg-icon-md svg-icon-primary">
+                </span>
+              </a>
+              <a title="Teams" class="btn btn-icon btn-light-primary btn-hover-primary btn-sm mx-1"
+                (click)="editTeams(item.id, item.displayName)">
+                <span class="svg-icon svg-icon-md svg-icon-primary">
+                  <em class="fas fa-users"></em>
+                </span>
+              </a>
+              <a title="Translations" class="btn btn-icon btn-light-primary btn-hover-primary btn-sm mx-1"
+                (click)="showTranslationModal(item.id)">
+                <span class="svg-icon svg-icon-md svg-icon-primary">                  
+                  <em class="fas fa-language"></em>
+                </span>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- end: Table -->
+    <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
+      [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator>
+  </div>
+</div>

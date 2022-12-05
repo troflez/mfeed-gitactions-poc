@@ -1,0 +1,63 @@
+<div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">Match Group List</h3>
+    </div>
+    <div class="card-toolbar">
+      <button type="button" class="btn btn-primary" (click)="create()" *ngIf="authService.hasWritePermission(MODULE.MatchGroup)">
+        <em class="fas fa-plus"></em> New Group
+      </button>
+    </div>
+  </div>
+  <div class="card-body">    
+    <!-- begin: Filtration form -->
+    <div class="form form-label-right">
+      <div class="form-group row">
+        <div class="col-lg-12">
+          <div class="row" [formGroup]="filterGroup">
+            <div class="col-lg-2">
+              <input type="text" class="form-control" name="name" placeholder="Search" value=""
+              formControlName="name" /><small class="form-text text-muted"><strong>Search</strong> by Group Name</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end: Filtration form -->
+    <!-- begin:Table -->
+    <div class="table-responsive angular-bootstrap-table">
+      <table class="table table-head-custom table-vertical-center overflow-hidden">
+        <thead>
+          <th>
+            Group Name
+            <app-sort-icon column="name" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
+          </th>
+          <th *ngIf="authService.hasWritePermission(MODULE.MatchGroup)">ACTIONS</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of matchGroupService.items$ | async">
+            <td>{{ item.name }}</td>
+            <td *ngIf="authService.hasWritePermission(MODULE.UserManagement)">
+              <a title="Edit" class="btn btn-icon btn-light-primary btn-hover-primary btn-sm mx-3"
+                (click)="edit(item.id)">
+                <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true"
+                  class="svg-icon svg-icon-md svg-icon-primary">
+                </span>
+              </a>
+              <a title="Delete group" class="btn btn-icon btn-light btn-hover-danger btn-sm"
+                (click)="delete(item.id)">
+                <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true"
+                  class="svg-icon svg-icon-md svg-icon-danger">
+                </span>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- end: Table -->
+    <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
+      [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator>
+  </div>
+</div>

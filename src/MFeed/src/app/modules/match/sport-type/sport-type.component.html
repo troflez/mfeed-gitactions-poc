@@ -1,0 +1,76 @@
+<div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">Sport Type List</h3>
+    </div>
+    <div class="card-toolbar">
+      <button type="button" class="btn btn-primary" (click)="create()" *ngIf="authService.hasWritePermission(MODULE.SportType)">
+        <em class="fas fa-plus"></em> New Sport Type
+      </button>
+    </div>
+  </div>
+  <div class="card-body">    
+    <!-- begin: Filtration form -->
+    <div class="form form-label-right">
+      <div class="form-group row">
+        <div class="col-lg-12">
+          <div class="row" [formGroup]="filterGroup">
+            <div class="col-lg-2">
+              <input type="text" class="form-control" name="name" placeholder="Search" value=""
+              formControlName="name" /><small class="form-text text-muted"><strong>Search</strong> by Name</small>
+            </div>            
+            <div class="col-lg-2">
+              <select class="form-control" name="isActive" placeholder="Filter by Is Active" formControlName="isActive">
+                <option value="">All</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select><small class="form-text text-muted"><strong>Filter</strong> by Is Active</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end: Filtration form -->
+    <!-- begin:Table -->
+    <div class="table-responsive angular-bootstrap-table">
+      <table class="table table-head-custom table-vertical-center overflow-hidden">
+        <thead>
+          <th>
+            Name
+            <app-sort-icon column="name" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
+          </th>
+          <th>
+            SPID
+            <app-sort-icon column="spid" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
+          </th>
+          <th>
+            Is Active
+            <app-sort-icon column="isActive" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
+          </th>
+          <th *ngIf="authService.hasWritePermission(MODULE.SportType)">ACTIONS</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of sportTypeService.items$ | async">
+            <td>{{ item.name }}</td>
+            <td>{{ item.spid }}</td>
+            <td>{{ item.isActive? "Yes": "No" }}</td>
+            <td *ngIf="authService.hasWritePermission(MODULE.SportType)">
+              <a title="Edit" class="btn btn-icon btn-light-primary btn-hover-primary btn-sm mx-3"
+                (click)="edit(item.id)">
+                <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true"
+                  class="svg-icon svg-icon-md svg-icon-primary">
+                </span>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- end: Table -->
+    <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
+      [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator>
+  </div>
+</div>
