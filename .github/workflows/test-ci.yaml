@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MFEEDDOMAIN: bo.mfeeduno.com
+      DOCKERUSER: fortbautista
 
     steps:
       - uses: actions/checkout@v3
@@ -19,10 +20,15 @@ jobs:
       - name: Change Config
         run: |
           sed -i 's, localhost:44343, $MFEEDDOMAIN, g' src/MFeed/src/environments/environment.ts
-          echo "sed -i 's, localhost:44343, $MFEEDDOMAIN, g' src/MFeed/src/environments/environment.ts"
 
-      # - name: Docker Image build
-      #   run: docker version |
-      #     DOCKER_BUILDKIT=1 docker build --progress plain -t harbor.btnpr.com/${repo_name_lower}/${branch_name}:latest .
-      #     docker tag harbor.btnpr.com/${repo_name_lower}/${branch_name}:latest harbor.btnpr.com/${repo_name_lower}/${branch_name}:${env.BUILD_NUMBER}
-      #     docker images
+      - name: Docker Image build
+        run: docker version |
+          docker build --progress plain -t $DOCKERUSER-${{ git.github.event.repository.name }}-${{ github.ref_name }}:latest .
+          docker tag $DOCKERUSER-${{ git.github.event.repository.name }}-${{ github.ref_name }}:latest $DOCKERUSER-${{ git.github.event.repository.name }}-${{ github.ref_name }}:${{ github.job }}
+          docker images
+
+      - name: Login to Dockerhub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secret.DOCKER_USERNAME }}
+          password: ${{ secret.DOCKER_PW }}
